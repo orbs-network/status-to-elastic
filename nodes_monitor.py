@@ -14,10 +14,10 @@ logger.addHandler(handler)
 DISKS_NAMES = {'/': 'root', '/mnt/data': 'mount'}  # TODO: support nodes with different mapping
 
 if __name__ == "__main__":
-    try:
-        config = configparser.ConfigParser()
-        config.read('nodes_monitor.conf')
-        while True:
+    config = configparser.ConfigParser()
+    config.read('nodes_monitor.conf')
+    while True:
+        try:
             status = requests.get(config['urls']['nodes_status']).json()
             committee_nodes = status['CommitteeNodes']
             for node_address, params in committee_nodes.items():
@@ -43,6 +43,7 @@ if __name__ == "__main__":
                 except:
                     print(f"Failed to gather metrics for node {node_address}")
                     traceback.print_exc()
+        except:
+            traceback.print_exc()
+        finally:
             sleep(config.getint('params', 'sleep_cycle'))
-    except:
-        traceback.print_exc()
