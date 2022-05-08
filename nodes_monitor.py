@@ -23,13 +23,14 @@ if __name__ == "__main__":
             for node_address, params in committee_nodes.items():
                 try:
                     ip = params["Ip"]
-                    eth_writer = config['urls']['eth_writer'].format(ip)
+                    port = config['ports'].get(ip, '80')
+                    eth_writer = config['urls']['eth_writer'].format(ip, port)
                     data = requests.get(eth_writer).json()
                     eth_balance = data['Payload']['EtherBalance']
 
                     metrics = {"name": params['Name'], 'eth_balance': int(eth_balance)/10**18}
 
-                    boyar_status = config['urls']['boyar_status'].format(ip)
+                    boyar_status = config['urls']['boyar_status'].format(ip, port)
                     data = requests.get(boyar_status).json()
                     for disk in data['Payload']['Metrics']['Disks']:
                         if name := DISKS_NAMES.get(disk['Mountpoint']):
