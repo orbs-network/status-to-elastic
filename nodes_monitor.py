@@ -27,8 +27,10 @@ if __name__ == "__main__":
                     eth_writer = config['urls']['eth_writer'].format(ip, port)
                     data = requests.get(eth_writer).json()
                     eth_balance = data['Payload']['EtherBalance']
-
-                    metrics = {"name": params['Name'], 'eth_balance': int(eth_balance)/10**18}
+                    matic_writer = config['urls']['matic_writer'].format(ip, port)
+                    data = requests.get(matic_writer).json()
+                    matic_balance = data['Payload']['EtherBalance']
+                    metrics = {"name": params['Name'], 'eth_balance': int(eth_balance)/10**18, 'matic_balance': int(matic_balance)/10**18}
 
                     boyar_status = config['urls']['boyar_status'].format(ip, port)
                     data = requests.get(boyar_status).json()
